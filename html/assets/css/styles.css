@@ -1,0 +1,340 @@
+/* ===== Fonts ===== */
+@font-face {
+  font-family: 'Gilroy';
+  src: url('../fonts/Gilroy-Light.otf') format('opentype');
+  font-weight: 300;
+}
+@font-face {
+  font-family: 'Gilroy';
+  src: url('../fonts/Gilroy-ExtraBold.otf') format('opentype');
+  font-weight: 800;
+}
+
+/* ===== Reset ===== */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { background: transparent !important; }
+body {
+  font-family: 'Gilroy', sans-serif;
+  overflow: hidden;
+  width: 100vw;
+  height: 100vh;
+  color: var(--text-primary);
+}
+
+.hidden { display: none !important; }
+
+/* ===== Scrollbar ===== */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
+
+/* ===== Glass Mixin ===== */
+.glass {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+}
+
+/* ===== Shared ===== */
+.progress-container {
+  position: fixed;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+.progress-container.show {
+  opacity: 1;
+  display: flex !important;
+}
+
+.progress-label {
+  font-weight: 300;
+  font-size: 13px;
+  color: var(--text-secondary);
+  letter-spacing: 0.3px;
+}
+.progress-percent {
+  font-weight: 800;
+  font-size: 13px;
+  color: var(--text-primary);
+}
+.progress-cancel {
+  font-size: 11px;
+  color: var(--text-secondary);
+  text-align: center;
+  margin-top: 8px;
+  font-weight: 300;
+  letter-spacing: 0.2px;
+}
+
+.progress-track {
+  width: 100%;
+  height: 6px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.06);
+  overflow: hidden;
+  position: relative;
+}
+
+.progress-fill {
+  height: 100%;
+  width: 0%;
+  border-radius: 10px;
+  position: relative;
+  transition: width 0.08s linear;
+  overflow: hidden;
+}
+
+/* ===== Shimmer ===== */
+.progress-shimmer {
+  position: absolute;
+  top: 0; left: -100%;
+  width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+  animation: shimmer 1.8s infinite;
+}
+.no-shimmer .progress-shimmer { display: none; }
+
+@keyframes shimmer {
+  0% { left: -100%; }
+  100% { left: 200%; }
+}
+
+/* ===== Pulse (>90%) ===== */
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 4px var(--progress-color, #3b82f6); }
+  50% { box-shadow: 0 0 14px var(--progress-color, #3b82f6), 0 0 20px var(--progress-color, #3b82f6); }
+}
+.progress-fill.pulsing {
+  animation: pulse-glow 0.8s ease-in-out infinite;
+}
+
+/* ===== Success Flash ===== */
+@keyframes success-flash {
+  0% { opacity: 0; }
+  30% { opacity: 1; }
+  100% { opacity: 0; }
+}
+.progress-container.success-flash::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--accent-green);
+  opacity: 0;
+  border-radius: inherit;
+  animation: success-flash 0.5s ease forwards;
+  pointer-events: none;
+}
+
+/* ===============================================
+   1. LINEAR BAR (bottom-center)
+   =============================================== */
+.progress-linear {
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  width: 340px;
+  flex-direction: column;
+  padding: 14px 18px 12px;
+  border-radius: 14px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+}
+.progress-linear.show {
+  transform: translateX(-50%) translateY(0);
+}
+.progress-linear .progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+/* ===============================================
+   2. CIRCULAR BAR (center)
+   =============================================== */
+.progress-circular {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.85);
+  align-items: center;
+  justify-content: center;
+}
+.progress-circular.show {
+  transform: translate(-50%, -50%) scale(1);
+}
+.circular-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 28px 32px 20px;
+  border-radius: 20px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+}
+.circular-svg-wrap {
+  position: relative;
+  width: 120px;
+  height: 120px;
+}
+.circular-svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+.circular-bg-ring {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.06);
+  stroke-width: 6;
+}
+.circular-fill-ring {
+  fill: none;
+  stroke: var(--progress-color, #3b82f6);
+  stroke-width: 6;
+  stroke-linecap: round;
+  stroke-dasharray: 326.73;
+  stroke-dashoffset: 326.73;
+  transition: stroke-dashoffset 0.08s linear;
+}
+.circular-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.circular-icon {
+  font-size: 22px;
+  color: var(--text-secondary);
+  margin-bottom: 2px;
+}
+.circular-percent {
+  font-weight: 800;
+  font-size: 22px;
+  color: var(--text-primary);
+}
+.circular-label {
+  font-weight: 300;
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-top: 12px;
+  letter-spacing: 0.3px;
+}
+
+/* ===============================================
+   3. MINI BAR (bottom-right)
+   =============================================== */
+.progress-mini {
+  bottom: 40px;
+  right: 40px;
+  width: 200px;
+  flex-direction: column;
+  padding: 10px 14px 8px;
+  border-radius: 10px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  transform: translateX(20px);
+}
+.progress-mini.show {
+  transform: translateX(0);
+}
+.mini-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+.mini-header .progress-label {
+  font-size: 11px;
+}
+.mini-header .progress-percent {
+  font-size: 11px;
+}
+.mini-track {
+  height: 4px;
+}
+
+/* ===============================================
+   4. SEMICIRCLE BAR (bottom-center)
+   =============================================== */
+.progress-semicircle {
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  align-items: center;
+  justify-content: center;
+}
+.progress-semicircle.show {
+  transform: translateX(-50%) translateY(0);
+}
+.semicircle-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 28px 16px;
+  border-radius: 18px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+}
+.semicircle-svg-wrap {
+  position: relative;
+  width: 200px;
+  height: 110px;
+}
+.semicircle-svg {
+  width: 100%;
+  height: 100%;
+}
+.semicircle-bg-arc {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.06);
+  stroke-width: 8;
+  stroke-linecap: round;
+}
+.semicircle-fill-arc {
+  fill: none;
+  stroke: var(--progress-color, #3b82f6);
+  stroke-width: 8;
+  stroke-linecap: round;
+  stroke-dasharray: 282.74;
+  stroke-dashoffset: 282.74;
+  transition: stroke-dashoffset 0.08s linear;
+}
+.semicircle-center {
+  position: absolute;
+  bottom: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+}
+.semicircle-percent {
+  font-weight: 800;
+  font-size: 24px;
+  color: var(--text-primary);
+}
+.semicircle-label {
+  font-weight: 300;
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-top: 8px;
+  letter-spacing: 0.3px;
+}
+
+/* ===== Circular pulse ===== */
+@keyframes ring-pulse {
+  0%, 100% { filter: none; }
+  50% { filter: drop-shadow(0 0 8px var(--progress-color, #3b82f6)); }
+}
+.circular-fill-ring.pulsing,
+.semicircle-fill-arc.pulsing {
+  animation: ring-pulse 0.8s ease-in-out infinite;
+}
